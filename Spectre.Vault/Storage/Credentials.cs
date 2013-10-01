@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using Scylla.XmlEngine;
 using Spectre.Common;
@@ -24,7 +27,7 @@ namespace Spectre.Vault.Storage
     }
 
     [XmlElement("CredentialPair")]
-    public class CredentialPair
+    public class CredentialPair : IEquatable<CredentialPair>
     {
         [XmlElement("Name")]
         public string Name { get; set; }
@@ -48,14 +51,35 @@ namespace Spectre.Vault.Storage
             Password = password;
         }
 
+        public CredentialPair()
+        {
+            
+        }
+
         public override bool Equals(object obj)
         {
-            var other = obj as CredentialPair;
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((CredentialPair) obj);
+        }
 
-            if (other != null)
-                return Name == other.Name && Username == other.Username;
+        public bool Equals(CredentialPair other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return string.Equals(Name, other.Name) && string.Equals(Username, other.Username) && string.Equals(Password, other.Password);
+        }
 
-            return false;
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = (Name != null ? Name.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (Username != null ? Username.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (Password != null ? Password.GetHashCode() : 0);
+                return hashCode;
+            }
         }
     }
 }

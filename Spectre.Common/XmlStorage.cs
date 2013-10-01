@@ -9,7 +9,7 @@ namespace Spectre.Common
 {
     public abstract class XmlStorage
     {
-        private readonly XmlEngine _engine = new XmlEngine();
+        private readonly XmlEngine _engine;
 
         protected XmlStorage(string path)
         {
