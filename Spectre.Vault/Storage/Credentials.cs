@@ -51,9 +51,11 @@ namespace Spectre.Vault.Storage
             Password = password;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CredentialPair"/> class. Mainly used by the Activator; we don't actually use this.
+        /// </summary>
         public CredentialPair()
         {
-            
         }
 
         public override bool Equals(object obj)
