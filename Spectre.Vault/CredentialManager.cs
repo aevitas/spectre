@@ -67,6 +67,27 @@ namespace Spectre.Vault
         }
 
         /// <summary>
+        /// Gets the credentials.
+        /// </summary>
+        /// <param name="index">The index.</param>
+        /// <returns></returns>
+        public static DecryptedCredentials GetCredentials(int index)
+        {
+            try
+            {
+                var entry = Entries[index];
+
+                return GetCredentials(entry.Name);
+            }
+            catch (Exception ex)
+            {
+                Logging.WriteException(ex);
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Gets the display entries.
         /// </summary>
         /// <returns></returns>
