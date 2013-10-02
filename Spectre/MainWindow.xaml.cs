@@ -22,14 +22,31 @@ namespace Spectre
 
             Logging.OnLog += OnLogging;
 
-            CredentialManager.OnReloadCompleted += () =>
-            {
-                Credentials = new ObservableCollection<EncryptedCredentials>(CredentialManager.GetDisplayEntries());
-            };
-            
-            CredentialManager.Reload();
+            Initialise();
+        }
 
-            Logging.Write("Spectre startup has finished.");
+        private void Initialise()
+        {
+            try
+            {
+                CredentialManager.OnReloadCompleted += () =>
+                {
+                    Logging.Write("CredentialManager.OnReloadCompleted caught!");
+                    Credentials = new ObservableCollection<EncryptedCredentials>(CredentialManager.GetDisplayEntries());
+                };
+
+                CredentialManager.Reload();
+
+                Logging.Write("Spectre startup has finished.");
+            }
+            catch (Exception ex)
+            {
+                Logging.WriteException(ex);
+                MessageBox.Show(
+                    "Something went wrong during initialisation. This is often an indication that Spectre's storage is corrupt, or the key file used to decrypt is different from the one used to encrypt the stored data. Either remove the Storage folder or place the appropriate key file in the Storage directory and re-start Spectre.",
+                    "Initialisation error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            
         }
 
         private void OnLogging(Logging.LogMessage message)
@@ -66,8 +83,15 @@ namespace Spectre
                 Logging.WriteException(ex);
 
                 MessageBox.Show("An error occured while attempting to set the clipboard text to your password. :(",
-                    "Something went wrong..", MessageBoxButton.OK);
+                    "Something went wrong..", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        private void BtnAddCredentials_Click(object sender, RoutedEventArgs e)
+        {
+            var window = new AddCredentials();
+
+            window.ShowDialog();
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Security.Cryptography;
-using System.Text;
+using Spectre.Common;
 using Spectre.Vault.Storage;
 
 namespace Spectre.Vault.Encryption
@@ -11,7 +11,7 @@ namespace Spectre.Vault.Encryption
         private static readonly RijndaelManaged RijndaelManaged = new RijndaelManaged();
         private static Rijndael _instance;
 
-        public static Rijndael Instance { get { return _instance ?? (_instance = new Rijndael()); }}
+        public static Rijndael Instance { get { return _instance ?? (_instance = new Rijndael()); } }
 
         private Rijndael()
         {
@@ -34,6 +34,7 @@ namespace Spectre.Vault.Encryption
             // Assign the Key and IV to the Rijndael instance, converting them from the Base64 string we store.
             RijndaelManaged.Key = Convert.FromBase64String(KeyFile.Instance.Key);
             RijndaelManaged.IV = Convert.FromBase64String(KeyFile.Instance.Iv);
+
         }
 
         /// <summary>
