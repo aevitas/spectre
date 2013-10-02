@@ -8,7 +8,7 @@
             <ColumnDefinition Width="95*"/>
             <ColumnDefinition Width="404*"/>
         </Grid.ColumnDefinitions>
-        <ListView x:Name="LstEntries" ItemsSource="{Binding Path=Credentials, RelativeSource={RelativeSource AncestorType={x:Type spectre:MainWindow}}}" Grid.ColumnSpan="2" Margin="0,100,1,130">
+        <ListView x:Name="LstEntries" ItemsSource="{Binding Path=Credentials, RelativeSource={RelativeSource AncestorType={x:Type spectre:MainWindow}}}" Margin="0,100,1,130">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Name" Width="250" DisplayMemberBinding="{Binding Name, Mode=OneWay}"/>
