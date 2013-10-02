@@ -111,7 +111,10 @@ namespace Spectre.Vault
             username = Rijndael.Instance.EncryptToBase64(username);
             password = Rijndael.Instance.EncryptToBase64(password);
 
-            Credentials.Instance.Entries.Add(new EncryptedCredentials(name, username, password));
+            var newEntry = new EncryptedCredentials(name, username, password);
+
+            Credentials.Instance.Entries.Add(newEntry);
+            Entries.Add(newEntry);
 
             Logging.WriteDiagnostic("[CredentialManager] Added credentials for user {0} with name {1}. Reloading the CredentialManager.", username, name);
 
