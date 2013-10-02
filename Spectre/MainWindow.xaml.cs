@@ -18,6 +18,8 @@ namespace Spectre
             InitializeComponent();
             
             CredentialManager.Reload();
+
+            Credentials = new ObservableCollection<EncryptedCredentials>(CredentialManager.GetDisplayEntries());
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

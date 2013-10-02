@@ -64,9 +64,9 @@ namespace Spectre.Vault
         /// Gets the display entries.
         /// </summary>
         /// <returns></returns>
-        public static List<Tuple<string, string>> GetDisplayEntries()
+        public static List<EncryptedCredentials> GetDisplayEntries()
         {
-            return Entries.Select(e => new Tuple<string, string>(e.Name, e.Username)).ToList();
+            return (from c in Entries let decrypted = GetCredentials(c.Name) let displayUsername = decrypted.Name.Substring(0, 3) + "***" select new EncryptedCredentials(c.Name, displayUsername, string.Empty)).ToList();
         }
 
         /// <summary>

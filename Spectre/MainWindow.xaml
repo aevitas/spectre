@@ -6,8 +6,8 @@
         <ListView HorizontalAlignment="Left" Height="394" VerticalAlignment="Top" Width="499" ItemsSource="{Binding Path=Credentials, Mode=OneWay}">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Name" Width="200"/>
-                    <GridViewColumn Header="Username" Width="250"/>
+                    <GridViewColumn Header="Name" Width="200" DisplayMemberBinding="{Binding Name, Mode=OneWay}"/>
+                    <GridViewColumn Header="Username" Width="250" DisplayMemberBinding="{Binding Username, Mode=OneWay}"/>
                 </GridView>
             </ListView.View>
         </ListView>
