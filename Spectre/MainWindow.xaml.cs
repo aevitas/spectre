@@ -20,7 +20,19 @@ namespace Spectre
         {
             InitializeComponent();
 
+            Credentials = new ObservableCollection<EncryptedCredentials>();
+
             Logging.OnLog += OnLogging;
+
+            CredentialManager.OnReloadCompleted += () =>
+            {
+                Logging.Write("CredentialManager.OnReloadCompleted handled by MainWindow.");
+                
+                Credentials.Clear();
+
+                foreach (var c in CredentialManager.GetDisplayEntries())
+                    Credentials.Add(c);
+            };
 
             Initialise();
         }
@@ -29,12 +41,6 @@ namespace Spectre
         {
             try
             {
-                CredentialManager.OnReloadCompleted += () =>
-                {
-                    Logging.Write("CredentialManager.OnReloadCompleted caught!");
-                    Credentials = new ObservableCollection<EncryptedCredentials>(CredentialManager.GetDisplayEntries());
-                };
-
                 CredentialManager.Reload();
 
                 Logging.Write("Spectre startup has finished.");
