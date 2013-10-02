@@ -27,7 +27,7 @@
             </TabItem>
             <TabItem Header="Log">
                 <Grid Background="#FFE5E5E5">
-
+                    <TextBox x:Name="RichTextBox" HorizontalAlignment="Left" Height="103" TextWrapping="Wrap" VerticalAlignment="Top" Width="499"/>
                 </Grid>
             </TabItem>
         </TabControl>
