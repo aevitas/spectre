@@ -2,18 +2,31 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:spectre="clr-namespace:Spectre"
-        Title="MainWindow" Height="517.553" Width="506.877">
-    <Grid>
-        <ListView HorizontalAlignment="Left" Height="394" VerticalAlignment="Top" Width="499" ItemsSource="{Binding Path=Credentials, RelativeSource={RelativeSource AncestorType={x:Type spectre:MainWindow}}}">
+        Title="Spectre" Height="609.553" Width="507.877" Icon="Images/boo.ico" Background="#FF5B2B2B">
+    <Grid Background="#FFF3F3F3">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="95*"/>
+            <ColumnDefinition Width="404*"/>
+        </Grid.ColumnDefinitions>
+        <ListView ItemsSource="{Binding Path=Credentials, RelativeSource={RelativeSource AncestorType={x:Type spectre:MainWindow}}}" Grid.ColumnSpan="2" Margin="0,100,1,130">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Name" Width="200" DisplayMemberBinding="{Binding Name, Mode=OneWay}"/>
+                    <GridViewColumn Header="Name" Width="250" DisplayMemberBinding="{Binding Name, Mode=OneWay}"/>
                     <GridViewColumn Header="Username" Width="250" DisplayMemberBinding="{Binding Username, Mode=OneWay}"/>
                 </GridView>
             </ListView.View>
         </ListView>
-        <Button Content="Encrypt" HorizontalAlignment="Left" Margin="10,399,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
-        <Button x:Name="BtnDecrypt" Content="Decrypt" HorizontalAlignment="Left" Margin="10,426,0,0" VerticalAlignment="Top" Width="75" Click="BtnDecrypt_Click"/>
+        <Image Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="100" Margin="10,0,0,0" VerticalAlignment="Top" Width="100" Source="Images/boo.png"/>
+        <Label x:Name="LblSpectre" Content="Spectre" Grid.Column="1" HorizontalAlignment="Left" Margin="33,10,0,0" VerticalAlignment="Top" FontSize="36" FontWeight="Bold" FontFamily="Tahoma" Foreground="#FF636363"/>
+        <Label Content="A simple password manager by aevitas" Grid.Column="1" HorizontalAlignment="Left" Margin="33,58,0,0" VerticalAlignment="Top" Foreground="#FFAEAEAE"/>
+        <TabControl x:Name="TabGeneral" Grid.ColumnSpan="2" Margin="0,0,1,0" Height="125" VerticalAlignment="Bottom">
+            <TabItem Header="Actions">
+                <Grid Background="#FFE5E5E5"/>
+            </TabItem>
+            <TabItem Header="Log">
+                <Grid Background="#FFE5E5E5"/>
+            </TabItem>
+        </TabControl>
 
     </Grid>
 </Window>

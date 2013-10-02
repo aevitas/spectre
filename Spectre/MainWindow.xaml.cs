@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Windows;
 using Spectre.Vault;
 using Spectre.Vault.Storage;
@@ -23,18 +22,6 @@ namespace Spectre
             };
             
             CredentialManager.Reload();
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            CredentialManager.AddCredentials("Some website", "aevitas", "somepassword");
-        }
-
-        private void BtnDecrypt_Click(object sender, RoutedEventArgs e)
-        {
-            var creds = CredentialManager.GetCredentials("Foobar");
-
-            MessageBox.Show("Username: " + creds.Username + " - Password: " + creds.Password);
         }
     }
 }
