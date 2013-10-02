@@ -11,20 +11,23 @@ namespace Spectre
     /// </summary>
     public partial class MainWindow : Window
     {
-        public ObservableCollection<EncryptedCredentials> Credentials = new ObservableCollection<EncryptedCredentials>(); 
+        public ObservableCollection<EncryptedCredentials> Credentials { get; set; }
 
         public MainWindow()
         {
             InitializeComponent();
+
+            CredentialManager.OnReloadCompleted += () =>
+            {
+                Credentials = new ObservableCollection<EncryptedCredentials>(CredentialManager.GetDisplayEntries());
+            };
             
             CredentialManager.Reload();
-
-            Credentials = new ObservableCollection<EncryptedCredentials>(CredentialManager.GetDisplayEntries());
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            CredentialManager.AddCredentials("Foobar", "Timo", "Ket");
+            CredentialManager.AddCredentials("Some website", "aevitas", "somepassword");
         }
 
         private void BtnDecrypt_Click(object sender, RoutedEventArgs e)

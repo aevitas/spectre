@@ -14,6 +14,10 @@ namespace Spectre.Vault
     {
         private static readonly List<EncryptedCredentials> Entries = new List<EncryptedCredentials>();
 
+        public delegate void UpdateDelegate();
+
+        public static event UpdateDelegate OnReloadCompleted;
+
         static CredentialManager()
         {
             Reload();
@@ -35,6 +39,8 @@ namespace Spectre.Vault
             }
 
             Logging.WriteDiagnostic("[CredentialManager] Reload completed; {0} items in the list after reloading.", Entries.Count);
+
+            InvokeOnReloadCompleted();
         }
 
         /// <summary>
@@ -66,7 +72,7 @@ namespace Spectre.Vault
         /// <returns></returns>
         public static List<EncryptedCredentials> GetDisplayEntries()
         {
-            return (from c in Entries let decrypted = GetCredentials(c.Name) let displayUsername = decrypted.Name.Substring(0, 3) + "***" select new EncryptedCredentials(c.Name, displayUsername, string.Empty)).ToList();
+            return (from c in Entries let decrypted = GetCredentials(c.Name) let displayUsername = decrypted.Username.Substring(0, 3) + "***" select new EncryptedCredentials(c.Name, displayUsername, string.Empty)).ToList();
         }
 
         /// <summary>
@@ -91,6 +97,12 @@ namespace Spectre.Vault
             Credentials.Instance.Save();
 
             Reload();
+        }
+
+        private static void InvokeOnReloadCompleted()
+        {
+            UpdateDelegate handler = OnReloadCompleted;
+            if (handler != null) handler();
         }
     }
 

@@ -1,9 +1,10 @@
 ﻿<Window x:Class="Spectre.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:spectre="clr-namespace:Spectre"
         Title="MainWindow" Height="517.553" Width="506.877">
     <Grid>
-        <ListView HorizontalAlignment="Left" Height="394" VerticalAlignment="Top" Width="499" ItemsSource="{Binding Path=Credentials, Mode=OneWay}">
+        <ListView HorizontalAlignment="Left" Height="394" VerticalAlignment="Top" Width="499" ItemsSource="{Binding Path=Credentials, RelativeSource={RelativeSource AncestorType={x:Type spectre:MainWindow}}}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Name" Width="200" DisplayMemberBinding="{Binding Name, Mode=OneWay}"/>
