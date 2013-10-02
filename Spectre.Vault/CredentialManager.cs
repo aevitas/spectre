@@ -12,7 +12,7 @@ namespace Spectre.Vault
     /// </summary>
     public static class CredentialManager
     {
-        private static readonly List<CredentialPair> Entries = new List<CredentialPair>();
+        private static readonly List<EncryptedCredentials> Entries = new List<EncryptedCredentials>();
 
         static CredentialManager()
         {
@@ -42,12 +42,12 @@ namespace Spectre.Vault
         /// </summary>
         /// <param name="pair">The pair.</param>
         /// <returns></returns>
-        public static Tuple<string, string> GetCredentials(CredentialPair pair)
+        public static DecryptedCredentials GetCredentials(EncryptedCredentials pair)
         {
             var user = Rijndael.Instance.DecryptFromBase64(pair.Username);
             var pass = Rijndael.Instance.DecryptFromBase64(pair.Password);
 
-            return new Tuple<string, string>(user, pass);
+            return new DecryptedCredentials(pair.Name, user, pass);
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace Spectre.Vault
         /// </summary>
         /// <param name="name">The name.</param>
         /// <returns></returns>
-        public static Tuple<string, string> GetCredentials(string name)
+        public static DecryptedCredentials GetCredentials(string name)
         {
             return GetCredentials(Entries.FirstOrDefault(e => e.Name == name));
         }
@@ -84,13 +84,27 @@ namespace Spectre.Vault
             username = Rijndael.Instance.EncryptToBase64(username);
             password = Rijndael.Instance.EncryptToBase64(password);
 
-            Credentials.Instance.Entries.Add(new CredentialPair(name, username, password));
+            Credentials.Instance.Entries.Add(new EncryptedCredentials(name, username, password));
 
             Logging.WriteDiagnostic("[CredentialManager] Added credentials for user {0} with name {1}. Reloading the CredentialManager.", username, name);
 
             Credentials.Instance.Save();
 
             Reload();
+        }
+    }
+
+    public class DecryptedCredentials
+    {
+        public string Name { get; set; }
+        public string Username { get; set; }
+        public string Password { get; set; }
+
+        public DecryptedCredentials(string name, string username, string password)
+        {
+            Name = name;
+            Username = username;
+            Password = password;
         }
     }
 }
