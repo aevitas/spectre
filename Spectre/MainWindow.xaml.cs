@@ -21,5 +21,12 @@ namespace Spectre
         {
             CredentialManager.AddCredentials("Foobar", "Aevitas", "SomeShit");
         }
+
+        private void BtnDecrypt_Click(object sender, RoutedEventArgs e)
+        {
+            var creds = CredentialManager.GetCredentials("Foobar");
+
+            MessageBox.Show("Username: " + creds.Item1 + " - Password: " + creds.Item2);
+        }
     }
 }

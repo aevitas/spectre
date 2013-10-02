@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CredentialManager.cs" />
+    <Compile Include="Encryption\Base64.cs" />
     <Compile Include="Encryption\Rijndael.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Storage\Credentials.cs" />

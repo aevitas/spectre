@@ -81,6 +81,9 @@ namespace Spectre.Vault
             if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
                 throw new Exception("[CredentialManager] Can't add a credential without valid values!");
 
+            username = Rijndael.Instance.EncryptToBase64(username);
+            password = Rijndael.Instance.EncryptToBase64(password);
+
             Credentials.Instance.Entries.Add(new CredentialPair(name, username, password));
 
             Logging.WriteDiagnostic("[CredentialManager] Added credentials for user {0} with name {1}. Reloading the CredentialManager.", username, name);

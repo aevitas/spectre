@@ -2,19 +2,18 @@
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
-using Spectre.Common;
 using Spectre.Vault.Storage;
 
 namespace Spectre.Vault.Encryption
 {
-    public class Rijndael
+    public sealed class Rijndael
     {
         private static readonly RijndaelManaged RijndaelManaged = new RijndaelManaged();
         private static Rijndael _instance;
 
         public static Rijndael Instance { get { return _instance ?? (_instance = new Rijndael()); }}
 
-        public Rijndael()
+        private Rijndael()
         {
             // If there's no values currently in the keyfile for Key or IV, generate them
             // and store them in the XML file. We'll be using them from this point on.
@@ -22,12 +21,14 @@ namespace Spectre.Vault.Encryption
             {
                 RijndaelManaged.GenerateKey();
                 KeyFile.Instance.Key = Convert.ToBase64String(RijndaelManaged.Key);
+                KeyFile.Instance.Save();
             }
 
             if (string.IsNullOrEmpty(KeyFile.Instance.Iv))
             {
                 RijndaelManaged.GenerateIV();
                 KeyFile.Instance.Iv = Convert.ToBase64String(RijndaelManaged.IV);
+                KeyFile.Instance.Save();
             }
 
             // Assign the Key and IV to the Rijndael instance, converting them from the Base64 string we store.
@@ -49,9 +50,9 @@ namespace Spectre.Vault.Encryption
             {
                 using (var sw = new StreamWriter(s))
                     sw.Write(source);
-            }
 
-            return memStream.ToArray();
+                return memStream.ToArray();
+            }
         }
 
         /// <summary>
@@ -77,10 +78,8 @@ namespace Spectre.Vault.Encryption
             using (var s = new CryptoStream(memStream, crypto, CryptoStreamMode.Read))
             {
                 using (var sr = new StreamReader(s))
-                    sr.ReadToEnd();
+                    return sr.ReadToEnd();
             }
-
-            return Encoding.ASCII.GetString(memStream.ToArray());
         }
 
         /// <summary>
@@ -90,7 +89,9 @@ namespace Spectre.Vault.Encryption
         /// <returns></returns>
         public string DecryptFromBase64(string source)
         {
-            return Decrypt(Convert.FromBase64String(source));
+            var bytes = Convert.FromBase64String(source);
+
+            return Decrypt(bytes);
         }
     }
 }
