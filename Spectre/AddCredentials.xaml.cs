@@ -10,9 +10,25 @@ namespace Spectre
     /// </summary>
     public partial class AddCredentials : Window
     {
-        public AddCredentials()
+        private bool _modifying = false;
+        private int _modifyIndex = -1;
+
+        public AddCredentials(bool modifying, int modifyIndex = -1)
         {
             InitializeComponent();
+
+            _modifying = modifying;
+            _modifyIndex = modifyIndex;
+
+            if (modifying)
+            {
+                var c = CredentialManager.GetCredentials(modifyIndex);
+
+                TxtName.Text = c.Name;
+                TxtUsername.Text = c.Username;
+                TxtPassword.Password = c.Password;
+                TxtPasswordAgain.Password = c.Password;
+            }
         }
 
         private void BtnCreate_Click(object sender, RoutedEventArgs e)
@@ -31,13 +47,22 @@ namespace Spectre
                 return;
             }
 
-            CredentialManager.AddCredentials(TxtName.Text, TxtUsername.Text, TxtPassword.Password);
+            if (!_modifying)
+            {
+                CredentialManager.AddCredentials(TxtName.Text, TxtUsername.Text, TxtPassword.Password);
 
-            MessageBox.Show(
-                string.Format("Added user {0} under name {1} successfully.", TxtUsername.Text, TxtName.Text),
-                "Success!", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show(
+                    string.Format("Added user {0} under name {1} successfully.", TxtUsername.Text, TxtName.Text),
+                    "Success!", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                CredentialManager.UpdateCredentials(_modifyIndex, TxtName.Text, TxtUsername.Text, TxtPassword.Password);
 
-            CredentialManager.Reload();
+                MessageBox.Show(
+                    string.Format("Modified user {0} successfully.", TxtUsername.Text),
+                    "Success!", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
 
             Close();
         }

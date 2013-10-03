@@ -41,7 +41,7 @@ namespace Spectre
         {
             try
             {
-                CredentialManager.Reload();
+                CredentialManager.Reload("Initialise");
 
                 Logging.Write("Spectre startup has finished.");
             }
@@ -78,6 +78,9 @@ namespace Spectre
 
         private void BtnCopyPassword_Click(object sender, RoutedEventArgs e)
         {
+            if (LstEntries.SelectedIndex <= 0)
+                return;
+
             var creds = CredentialManager.GetCredentials(LstEntries.SelectedIndex);
 
             try
@@ -95,7 +98,14 @@ namespace Spectre
 
         private void BtnAddCredentials_Click(object sender, RoutedEventArgs e)
         {
-            var window = new AddCredentials();
+            var window = new AddCredentials(false);
+
+            window.ShowDialog();
+        }
+
+        private void BtnEditSelected_Click(object sender, RoutedEventArgs e)
+        {
+            var window = new AddCredentials(true, LstEntries.SelectedIndex);
 
             window.ShowDialog();
         }

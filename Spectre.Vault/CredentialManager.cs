@@ -12,7 +12,7 @@ namespace Spectre.Vault
     /// </summary>
     public static class CredentialManager
     {
-        private static readonly List<EncryptedCredentials> Entries = new List<EncryptedCredentials>();
+        internal static readonly List<EncryptedCredentials> Entries = new List<EncryptedCredentials>();
 
         public delegate void UpdateDelegate();
 
@@ -20,11 +20,13 @@ namespace Spectre.Vault
 
         static CredentialManager()
         {
-            Reload();
+            Reload("Constructor");
         }
 
-        public static void Reload()
+        public static void Reload(string reason)
         {
+            Logging.Write("CredentialManager.Reload - Reason: {0}", reason);
+
             Entries.Clear();
 
             var entries = Credentials.Instance.Entries;
@@ -79,12 +81,37 @@ namespace Spectre.Vault
 
                 return GetCredentials(entry.Name);
             }
-            catch (Exception ex)
+            catch (IndexOutOfRangeException ex)
             {
                 Logging.WriteException(ex);
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Updates the credentials.
+        /// </summary>
+        /// <param name="index">The index.</param>
+        /// <param name="name">The name.</param>
+        /// <param name="username">The username.</param>
+        /// <param name="password">The password.</param>
+        public static void UpdateCredentials(int index, string name, string username, string password)
+        {
+            try
+            {
+                var entry = Credentials.Instance.Entries[index];
+
+                entry.Name = name;
+                entry.Username = Rijndael.Instance.EncryptToBase64(username);
+                entry.Password = Rijndael.Instance.EncryptToBase64(password);
+
+                Reload("Credentials modified for " + name);
+            }
+            catch (IndexOutOfRangeException ex)
+            {
+                Logging.WriteException(ex);
+            }
         }
 
         /// <summary>
@@ -120,7 +147,7 @@ namespace Spectre.Vault
 
             Credentials.Instance.Save();
 
-            Reload();
+            Reload("Credentials added");
         }
 
         private static void InvokeOnReloadCompleted()
